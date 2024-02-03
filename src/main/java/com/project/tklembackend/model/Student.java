@@ -1,24 +1,23 @@
-package com.project.tklembackend.entity;
+package com.project.tklembackend.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
+@Table(name="student")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class Role {
+public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    private Roles roleName;
-    @ManyToMany(mappedBy = "roles")
-    private ArrayList<User> users = new ArrayList<>();
+    private String name;
+    private String massarCode;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private AClass aClass;
 
 }

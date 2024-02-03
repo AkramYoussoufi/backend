@@ -1,4 +1,4 @@
-package com.project.tklembackend.entity;
+package com.project.tklembackend.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -33,6 +33,7 @@ public class User implements UserDetails {
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles = new ArrayList<>();
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
