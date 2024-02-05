@@ -1,28 +1,31 @@
 package com.project.tklembackend.service;
 
-import lombok.AllArgsConstructor;
-
+import com.project.tklembackend.model.Roles;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import io.jsonwebtoken.*;
-
+import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
 @Service
-@AllArgsConstructor
 public class JWTService {
 
-    private static final String JWT_PASSWORD = "YourJWTPasswordMustBeLongerThenExpected";
-    private static final long EXPIRATION_DATE = 86_400_000; // 1 day
-    public String generateToken(Long id){
+    @Value("${jwt.key}")
+    private String jwtKey;
+
+    public String generateToken(String email, Roles role){
+
+        long expirationDate = (86_400_000L)/*1 day*/ * 364;
         return Jwts.builder()
-                .setSubject(id.toString())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_DATE))
-                .signWith(SignatureAlgorithm.HS512, JWT_PASSWORD)
+                .setSubject(email)
+                .claim("role",role)
+                .setExpiration(new Date(System.currentTimeMillis() + expirationDate))
+                .signWith(SignatureAlgorithm.HS512, jwtKey)
                 .compact();
     };
 
     public String extractJWT(String token){
         return Jwts.parser()
-                .setSigningKey(JWT_PASSWORD)
+                .setSigningKey(jwtKey)
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();

@@ -4,11 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.security.core.GrantedAuthority;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @AllArgsConstructor
