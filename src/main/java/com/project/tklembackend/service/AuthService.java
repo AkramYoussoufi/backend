@@ -40,6 +40,7 @@ public class AuthService {
     public void signIn(RegisterRequest registerRequest) throws InstanceAlreadyExistsException {
         UserEntity user = new UserEntity();
             if(userEntityRepository.findByEmail(registerRequest.getEmail()).isEmpty()){
+                user.setName(registerRequest.getName());
                 user.setEmail(registerRequest.getEmail());
                 user.setPassword(bCryptPasswordEncoder.encode(registerRequest.getPassword()));
                 Role role = roleRepository.findById(4L).orElseThrow(()->new NoSuchElementException("Role doesn't exist"));
@@ -47,7 +48,7 @@ public class AuthService {
 
                 userEntityRepository.save(user);
             }else{
-                throw new InstanceAlreadyExistsException("the user you trying to save doesn't exist: "+registerRequest.getEmail());
+                throw new InstanceAlreadyExistsException("the user you trying to save already exist: "+registerRequest.getEmail());
             }
     }
 

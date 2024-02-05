@@ -8,6 +8,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.management.InstanceAlreadyExistsException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -15,7 +16,7 @@ import java.util.NoSuchElementException;
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-    @ExceptionHandler({AuthenticationFailedException.class, NoSuchElementException.class, DisabledException.class})
+    @ExceptionHandler({AuthenticationFailedException.class, NoSuchElementException.class, DisabledException.class, InstanceAlreadyExistsException.class})
     public ResponseEntity<Object> handleGlobalException(Exception e) {
         Map<String,String> message = new HashMap<>();
         message.put("message",e.getMessage());
