@@ -38,7 +38,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
             case "RECEPTOR" -> receptorRepository.findByEmail(email).get();
             case "RECIEVER" -> recieverRepository.findByEmail(email).get();
             case "PARENT" -> parentRepository.findByEmail(email).get();
-            default -> null;
+            default -> userEntity;
         };
     }
 

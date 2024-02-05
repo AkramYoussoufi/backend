@@ -6,8 +6,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
 @MappedSuperclass
+@Data
 public abstract class User {
 
     @Id

@@ -21,14 +21,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public  class UserEntity implements UserDetails {
+public  class UserEntity extends User implements UserDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
-    @Column(unique=true)
-    @Email
-    private String email;
+
     private String password;
     @OneToOne
     private Role role;
@@ -48,7 +43,7 @@ public  class UserEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return getEmail();
     }
 
     @Override
