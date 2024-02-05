@@ -22,5 +22,7 @@ public class Parent extends User {
     private String cin;
     @ManyToMany(mappedBy = "parentList")
     private List<Student> studentList = new ArrayList<>();
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    private UserEntity userEntity;
 
 }

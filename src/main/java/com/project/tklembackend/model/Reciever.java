@@ -20,4 +20,6 @@ public class Reciever extends User {
 
     @ManyToOne
     private Formation formation;
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    private UserEntity userEntity;
 }
