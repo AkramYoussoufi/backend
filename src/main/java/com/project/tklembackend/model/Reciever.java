@@ -2,6 +2,7 @@ package com.project.tklembackend.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,7 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class Reciever extends User {
-
+    @NotBlank(message="name is mandatory")
+    private String name;
     @ManyToOne
     private Formation formation;
     @ManyToOne(cascade = CascadeType.REMOVE)

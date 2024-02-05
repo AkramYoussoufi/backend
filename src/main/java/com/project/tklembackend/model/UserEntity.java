@@ -18,8 +18,6 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public  class UserEntity extends User implements UserDetails {
-
-
     @OneToOne
     private Role role;
     private String password;
