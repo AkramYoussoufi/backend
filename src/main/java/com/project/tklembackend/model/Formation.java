@@ -18,6 +18,7 @@ public class Formation {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     @NotBlank(message="name is mandatory")
+    @Column(unique = true)
     private String name;
     @OneToMany(fetch = FetchType.LAZY)
     private List<Student> studentList;

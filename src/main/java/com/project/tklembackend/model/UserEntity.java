@@ -1,5 +1,6 @@
 package com.project.tklembackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +28,7 @@ public  class UserEntity extends User implements UserDetails {
     private List<Receptor> receptorList = new ArrayList<>();
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Reciever> recieverList = new ArrayList<>();
+    private Boolean enabled = false;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -57,6 +59,8 @@ public  class UserEntity extends User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return getEnabled();
     }
+
+
 }
