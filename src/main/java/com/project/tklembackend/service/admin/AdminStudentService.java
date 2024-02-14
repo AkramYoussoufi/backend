@@ -24,11 +24,13 @@ public class AdminStudentService {
     private final StudentRepository studentRepository;
     private final FormationRepository formationRepository;
 
+    @Transactional
     public List<StudentResponseDto> getAllStudent(){
         ArrayList<StudentResponseDto> studentResponseDtoArrayList = new ArrayList<>();
         studentRepository.findAll().forEach(
                 student -> {
                     StudentResponseDto response = new StudentResponseDto();
+                    response.setId(student.getId());
                     response.setName(student.getName());
                     response.setFormation(student.getFormation().getName());
                     response.setCodeMassar(student.getMassarCode());

@@ -1,6 +1,7 @@
 package com.project.tklembackend.service.admin;
 
 import com.project.tklembackend.dto.FormationDto;
+import com.project.tklembackend.dto.FormationResponseDto;
 import com.project.tklembackend.model.Formation;
 import com.project.tklembackend.model.Reciever;
 import com.project.tklembackend.repository.FormationRepository;
@@ -21,5 +22,17 @@ public class AdminFormationService {
         formation.setName(formationDto.getName());
         formationRepository.save(formation);
         return formation;
+    }
+
+    public List<FormationResponseDto> getAllFormations() {
+        List<FormationResponseDto> list = new ArrayList<>();
+        formationRepository.findAll().forEach(
+                item -> {
+                    list.add(
+                            new FormationResponseDto(item.getId(),item.getName())
+                    );
+                }
+        );
+        return list;
     }
 }
