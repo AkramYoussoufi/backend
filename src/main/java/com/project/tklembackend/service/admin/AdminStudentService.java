@@ -16,6 +16,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Service
@@ -32,8 +33,8 @@ public class AdminStudentService {
                     StudentResponseDto response = new StudentResponseDto();
                     response.setId(student.getId());
                     response.setName(student.getName());
-                    response.setFormation(student.getFormation().getName());
-                    response.setCodeMassar(student.getMassarCode());
+                    response.setFormationName(student.getFormation().getName());
+                    response.setMassarCode(student.getMassarCode());
                     LocalDate localDate = student.getCreatedOn().atZone(ZoneId.systemDefault()).toLocalDate();
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                     String formattedDate = formatter.format(localDate);
@@ -57,5 +58,54 @@ public class AdminStudentService {
             return studentRepository.save(student);
         }
         throw new InstanceAlreadyExistsException("Massar Code of this student already exist");
+    }
+
+    @Transactional
+    public Student editStudent(StudentRequestDto studentRequestDto) {
+        if(studentRepository.existsById(studentRequestDto.getId())){
+            Student student = StudentDTOtoStudent(studentRequestDto);
+            studentRepository.save(student);
+
+            return student;
+        }
+        throw new NoSuchElementException("element you trying to modify doesn't exist");
+    }
+
+    @Transactional
+    public void deleteStudent(Long id) {
+        try{
+            studentRepository.delete(studentRepository.findById(id).get());
+        }catch (Exception e){
+            throw new NoSuchElementException("element you trying to delete doesn't exist");
+        }
+    }
+
+    @Transactional
+    public void deleteAllStudent(ArrayList<Long> response) {
+        try{
+            if(response.size() == studentRepository.count()){
+                studentRepository.deleteAll();
+            }else{
+                studentRepository.deleteAllById(response);
+            }
+        }catch (Exception e){
+            throw new NoSuchElementException("element you trying to delete doesn't exist");
+        }
+    }
+
+    private Student StudentDTOtoStudent(StudentRequestDto requestDto){
+        Student student = new Student();
+        if(requestDto.getId() != null){
+            student.setId(requestDto.getId());
+        }
+        student.setName(requestDto.getName());
+        Formation formation = formationRepository.findByName(requestDto.getFormationName()).orElseThrow(
+                () -> new NoSuchElementException("Student formation doesn't exist")
+        );
+        student.setFormation(formation);
+        student.setMassarCode(requestDto.getMassarCode());
+
+        studentRepository.save(student);
+        return student;
     }
 }

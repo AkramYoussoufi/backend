@@ -11,7 +11,7 @@ import java.time.Instant;
 public class StudentResponseDto {
     private Long id;
     private String name;
-    private String CodeMassar;
-    private String Formation;
+    private String massarCode;
+    private String formationName;
     private String Created;
 }
