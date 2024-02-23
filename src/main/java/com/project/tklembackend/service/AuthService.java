@@ -64,6 +64,15 @@ public class AuthService {
         throw new AuthenticationFailedException("authentication failed");
     }
 
+    public Boolean checkJWT(String token){
+        try{
+            String extractedToken = jwtService.extractJWT(token);
+            return userEntityRepository.existsByEmail(extractedToken);
+        }catch (Exception e){
+            return false;
+        }
+    };
+
     public Optional<User> getCurrentAuthenticatedUser() {
         return Optional.of((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
     }

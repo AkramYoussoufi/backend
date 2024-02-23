@@ -37,4 +37,10 @@ public class AuthController {
         response.put("token",token);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
+    @PostMapping("/check")
+    public ResponseEntity<Map<String,Boolean>> checkJWT(@RequestBody Map<String, String> request){
+        Map<String,Boolean> response = new HashMap<>();
+        response.put("status",authService.checkJWT(request.get("token")));
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
 }
