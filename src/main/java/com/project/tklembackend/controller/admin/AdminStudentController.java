@@ -1,7 +1,6 @@
 package com.project.tklembackend.controller.admin;
 
-import com.project.tklembackend.dto.StudentRequestDto;
-import com.project.tklembackend.dto.StudentResponseDto;
+import com.project.tklembackend.dto.StudentDTO;
 import com.project.tklembackend.model.Student;
 import com.project.tklembackend.service.admin.AdminStudentService;
 import lombok.AllArgsConstructor;
@@ -22,20 +21,20 @@ public class AdminStudentController {
     private final AdminStudentService adminStudentService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<StudentResponseDto>> getAllStudents(){
-        List<StudentResponseDto> responseList = adminStudentService.getAllStudent();
+    public ResponseEntity<List<StudentDTO>> getAllStudents(){
+        List<StudentDTO> responseList = adminStudentService.getAllStudent();
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Student> addStudent(@RequestBody StudentRequestDto studentRequestDto) throws InstanceAlreadyExistsException {
-        Student student = adminStudentService.addStudent(studentRequestDto);
+    public ResponseEntity<Student> addStudent(@RequestBody StudentDTO studentDTO) throws InstanceAlreadyExistsException {
+        Student student = adminStudentService.addStudent(studentDTO);
         return new ResponseEntity<>(student,HttpStatus.CREATED);
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<Student> editStudent(@RequestBody StudentRequestDto studentRequestDto) {
-        Student student = adminStudentService.editStudent(studentRequestDto);
+    public ResponseEntity<Student> editStudent(@RequestBody StudentDTO studentDTO) {
+        Student student = adminStudentService.editStudent(studentDTO);
         return new ResponseEntity<>(student,HttpStatus.CREATED);
     }
 

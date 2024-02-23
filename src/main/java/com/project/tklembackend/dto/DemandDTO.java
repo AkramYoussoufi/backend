@@ -1,17 +1,20 @@
 package com.project.tklembackend.dto;
 
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UserDTO {
+public class DemandDTO {
     private Long id;
+    private String name;
     private String email;
-    @Size(min = 8, message = "Minimum length must be 8 characters")
     private String password;
-    private Boolean status;
+    private String cin;
+    private ArrayList<String> studentsMassarCode = new ArrayList<>();
+    private ArrayList<StudentDTO> students = new ArrayList<>();
 }

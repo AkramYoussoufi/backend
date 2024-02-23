@@ -1,17 +1,21 @@
 package com.project.tklembackend.dto;
 
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class UserDTO {
+public class ParentDTO {
     private Long id;
     private String email;
-    @Size(min = 8, message = "Minimum length must be 8 characters")
     private String password;
+    private String name;
+    private String cin;
+    private Set<String> studentsNames = new HashSet<>();
     private Boolean status;
 }

@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface ParentRepository extends JpaRepository<Parent, Long> {
     Optional<User> findByEmail(String email);
+
+    boolean existsByCin(String cin);
 }

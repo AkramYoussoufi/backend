@@ -26,9 +26,9 @@ public class AutoLoader implements CommandLineRunner {
                 roleRepository.save(role);
             }
         }
-        if(!userEntityRepository.findByEmail("admin@admin.admin").isPresent()){
+        if(!userEntityRepository.findByEmail("admin").isPresent()){
             UserEntity userEntity = new UserEntity();
-            userEntity.setEmail("admin@admin.admin");
+            userEntity.setEmail("admin");
             userEntity.setPassword(bCryptPasswordEncoder.encode("admin1234"));
             userEntity.setRole(roleRepository.findById(1L).get());
             userEntity.setEnabled(true);

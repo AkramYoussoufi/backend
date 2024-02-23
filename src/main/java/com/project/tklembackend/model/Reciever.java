@@ -18,6 +18,6 @@ public class Reciever extends User {
     private String name;
     @ManyToOne
     private Formation formation;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "reciever", cascade = CascadeType.ALL, orphanRemoval = true,fetch=FetchType.EAGER)
     private UserEntity userEntity;
 }

@@ -1,6 +1,5 @@
 package com.project.tklembackend.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -19,15 +19,15 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public  class UserEntity extends User implements UserDetails {
-    @OneToOne
+    @ManyToOne
     private Role role;
     private String password;
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Parent> parentList = new ArrayList<>();
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Receptor> receptorList = new ArrayList<>();
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Reciever> recieverList = new ArrayList<>();
+    @OneToOne
+    private Parent parent;
+    @OneToOne
+    private Receptor receptor;
+    @OneToOne
+    private Reciever reciever;
     private Boolean enabled = false;
 
     @Override

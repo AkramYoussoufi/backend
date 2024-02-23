@@ -15,6 +15,6 @@ import lombok.NoArgsConstructor;
 public class Receptor extends User {
     @NotBlank(message="name is mandatory")
     private String name;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "receptor", cascade = CascadeType.ALL, orphanRemoval = true,fetch=FetchType.EAGER)
     private UserEntity userEntity;
 }

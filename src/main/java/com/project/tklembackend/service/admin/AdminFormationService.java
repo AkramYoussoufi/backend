@@ -1,11 +1,8 @@
 package com.project.tklembackend.service.admin;
 
-import com.project.tklembackend.dto.FormationDto;
-import com.project.tklembackend.dto.FormationResponseDto;
+import com.project.tklembackend.dto.FormationDTO;
 import com.project.tklembackend.model.Formation;
-import com.project.tklembackend.model.Reciever;
 import com.project.tklembackend.repository.FormationRepository;
-import com.project.tklembackend.repository.RecieverRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,23 +13,33 @@ import java.util.List;
 @AllArgsConstructor
 public class AdminFormationService {
     private final FormationRepository formationRepository;
-    private final RecieverRepository recieverRepository;
-    public Formation addFormation(FormationDto formationDto) {
+    public Formation addFormation(FormationDTO formationDto) {
         Formation formation = new Formation();
         formation.setName(formationDto.getName());
         formationRepository.save(formation);
         return formation;
     }
-
-    public List<FormationResponseDto> getAllFormations() {
-        List<FormationResponseDto> list = new ArrayList<>();
+    public List<FormationDTO> getAllFormations() {
+        List<FormationDTO> list = new ArrayList<>();
         formationRepository.findAll().forEach(
                 item -> {
                     list.add(
-                            new FormationResponseDto(item.getId(),item.getName())
+                            new FormationDTO(item.getId(),item.getName())
                     );
                 }
         );
         return list;
+    }
+    public Formation editFormations(FormationDTO formationDto) {
+        Formation formation = new Formation();
+        formation.setName(formationDto.getName());
+        formation.setId(formationDto.getId());
+        return formationRepository.save(formation);
+    }
+    public void deleteFormations(Long id) {
+        formationRepository.deleteById(id);
+    }
+    public void deleteAllFormations() {
+        formationRepository.deleteAll();
     }
 }

@@ -4,11 +4,12 @@ import com.project.tklembackend.dto.UserDTO;
 import com.project.tklembackend.model.Role;
 import com.project.tklembackend.model.UserEntity;
 import com.project.tklembackend.repository.RoleRepository;
-import com.project.tklembackend.repository.UserEntityRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @AllArgsConstructor
@@ -40,5 +41,11 @@ public class GlobalService {
         request.setStatus(user.getEnabled());
 
         return request;
+    }
+
+    public Map<String,String> responseBuilder(String message){
+        Map<String,String> response = new HashMap<>();
+        response.put("message",message);
+        return response;
     }
 }
