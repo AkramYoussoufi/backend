@@ -100,4 +100,8 @@ public class AdminRecieverService {
         Reciever.setUserEntity(userEntity);
         return convertToDTO(Reciever);
     }
+
+    public void callReciever(String massarCode) {
+        System.out.println(massarCode);
+    }
 }

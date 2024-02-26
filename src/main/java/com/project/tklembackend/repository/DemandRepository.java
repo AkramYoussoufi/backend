@@ -13,4 +13,6 @@ public interface DemandRepository extends JpaRepository<Demand,Long> {
     boolean existsByCin(String cin);
 
     Student findByStudents(Student student);
+
+    Demand findByEmail(String email);
 }

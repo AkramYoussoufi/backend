@@ -19,6 +19,6 @@ public class Demand {
     private String email;
     private String password;
     private String cin;
-    @OneToMany
+    @ManyToMany
     private List<Student> students;
 }

@@ -128,16 +128,23 @@ public class AdminParentService {
         parent.setName(parentDTO.getName());
         parent.setCin(parentDTO.getCin());
 
+        // Remove parent from old students and clear existing list
+        parent.getStudents().forEach(student -> {
+            student.getParents().remove(parent);
+        });
         parent.getStudents().clear();
+
+        // Add new students from DTO and update relationships
         parentDTO.getStudentsNames().stream()
                 .map(studentRepository::findByName)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .forEach(student -> {
                     parent.getStudents().add(student);
-                    student.getParents().add(parent);
+                    if (!student.getParents().contains(parent)) {
+                        student.getParents().add(parent);
+                    }
                     studentRepository.save(student);
                 });
-
     }
 }

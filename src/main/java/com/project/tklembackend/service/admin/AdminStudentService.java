@@ -2,10 +2,12 @@ package com.project.tklembackend.service.admin;
 
 import com.project.tklembackend.dto.StudentDTO;
 import com.project.tklembackend.model.Formation;
+import com.project.tklembackend.model.Parent;
 import com.project.tklembackend.model.Student;
-import com.project.tklembackend.repository.DemandRepository;
 import com.project.tklembackend.repository.FormationRepository;
+import com.project.tklembackend.repository.ParentRepository;
 import com.project.tklembackend.repository.StudentRepository;
+import com.project.tklembackend.service.AuthService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,8 @@ import java.util.NoSuchElementException;
 public class AdminStudentService {
     private final StudentRepository studentRepository;
     private final FormationRepository formationRepository;
-    private final DemandRepository demandRepository;
+    private final AuthService authService;
+    private ParentRepository parentRepository;
 
     @Transactional
     public List<StudentDTO> getAllStudent(){
@@ -99,5 +102,32 @@ public class AdminStudentService {
 
         studentRepository.save(student);
         return student;
+    }
+
+
+    public List<StudentDTO> getMyStudents() {
+        Parent parent =  parentRepository.findByEmail(this.authService.getCurrentAuthenticatedUser().get().getEmail()).get();
+        return parent.getStudents().stream().map(item->{
+            StudentDTO studentDTO = new StudentDTO();
+            studentDTO.setName(item.getName());
+            studentDTO.setMassarCode(item.getMassarCode());
+            studentDTO.setFormationName(item.getFormation().getName());
+            return  studentDTO;
+        }).toList();
+    }
+
+    public void deleteStudentFromParent(String massarCode) {
+        // Retrieve the student
+        System.out.println(massarCode);
+        Student student = studentRepository.findByMassarCode(massarCode)
+                .orElseThrow(() -> new NoSuchElementException("Student not found"));
+
+// Retrieve the parent
+        Parent parent = parentRepository.findByEmail(authService.getCurrentAuthenticatedUser().get().getEmail())
+                .orElseThrow(() -> new NoSuchElementException("Parent not found"));
+
+// Remove the parent from the list of parents associated with the student
+        student.getParents().remove(parent);
+        studentRepository.save(student);
     }
 }

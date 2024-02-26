@@ -6,6 +6,7 @@ import com.project.tklembackend.dto.SignupRequest;
 import com.project.tklembackend.model.Role;
 import com.project.tklembackend.model.User;
 import com.project.tklembackend.model.UserEntity;
+import com.project.tklembackend.repository.DemandRepository;
 import com.project.tklembackend.repository.RoleRepository;
 import com.project.tklembackend.repository.UserEntityRepository;
 import jakarta.mail.AuthenticationFailedException;
@@ -35,6 +36,7 @@ public class AuthService {
     private final AuthenticationProvider authenticationProvider;
     private final UserDetailsServiceImp userDetailsServiceImp;
     private final JWTService jwtService;
+    private final DemandRepository demandRepository;
 
     @Transactional
     public void signIn(RegisterRequest registerRequest) throws InstanceAlreadyExistsException {
@@ -51,9 +53,12 @@ public class AuthService {
             }
     }
 
-    public String authenticateUser(SignupRequest signupRequest) throws AuthenticationFailedException {
+    public String authenticateUser(SignupRequest signupRequest) throws AuthenticationFailedException, InstanceAlreadyExistsException {
+        if(demandRepository.existsByEmail(signupRequest.getEmail()) && !userEntityRepository.existsByEmail(signupRequest.getEmail())){
+            throw new InstanceAlreadyExistsException("Votre compte est en attente, vous devez attendre l'approbation de l'administrateur pour pouvoir vous connecter. Veuillez vérifier auprès de votre responsable si cela se prolonge trop longtemps.");
+        }
         UserEntity user = userEntityRepository.findByEmail(signupRequest.getEmail()).orElseThrow(
-                    () -> new NoSuchElementException("User not found for email: " + signupRequest.getEmail())
+                    () -> new NoSuchElementException("Cet utilisateur n'est pas trouvé, veuillez vous inscrire ou vérifier vos informations d'identification si vous n'êtes pas sûr, vérifiez auprès des administrateurs")
         );
         UserDetails userDetails = userDetailsServiceImp.loadUserByUsername(user.getUsername());
         Authentication authToken = new UsernamePasswordAuthenticationToken(userDetails, signupRequest.getPassword(), userDetails.getAuthorities());
@@ -61,7 +66,11 @@ public class AuthService {
         if(authentication.isAuthenticated()){
             return jwtService.generateToken(user.getEmail(),user.getRole().getRoleName());
         }
-        throw new AuthenticationFailedException("authentication failed");
+
+        if(!userEntityRepository.findByEmail(signupRequest.getEmail()).get().getEnabled()){
+            throw new InstanceAlreadyExistsException("Votre compte est désactivé, vérifiez auprès de votre administrateur.");
+        }
+        throw new AuthenticationFailedException("Quelque chose s'est mal passé");
     }
 
     public Boolean checkJWT(String token){
@@ -72,6 +81,12 @@ public class AuthService {
             return false;
         }
     };
+
+    public String getCurrentRole(){
+        return userEntityRepository.findByEmail(getCurrentAuthenticatedUser().get().getEmail()).get().getRole().getRoleName().name();
+    }
+
+
 
     public Optional<User> getCurrentAuthenticatedUser() {
         return Optional.of((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());

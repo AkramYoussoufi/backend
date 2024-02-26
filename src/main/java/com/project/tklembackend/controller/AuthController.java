@@ -1,8 +1,10 @@
 package com.project.tklembackend.controller;
 
+import com.project.tklembackend.dto.DemandDTO;
 import com.project.tklembackend.dto.RegisterRequest;
 import com.project.tklembackend.dto.SignupRequest;
 import com.project.tklembackend.service.AuthService;
+import com.project.tklembackend.service.mobile.DemandService;
 import jakarta.mail.AuthenticationFailedException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,7 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
+    private final DemandService demandService;
     @PostMapping("/signin")
     public ResponseEntity<Map<String,String>> signIn(@RequestBody RegisterRequest registerRequest) throws InstanceAlreadyExistsException {
         authService.signIn(registerRequest);
@@ -29,9 +32,12 @@ public class AuthController {
         responseMap.put("message", "User Successfully created!");
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
-
+    @PostMapping ("add/parent")
+    public ResponseEntity<Map<String,String>> demandAddParent(@RequestBody DemandDTO demandDTO) throws InstanceAlreadyExistsException {
+        return demandService.demandAddParent(demandDTO);
+    }
     @PostMapping("/signup")
-    public ResponseEntity<Map<String,String>> signUp(@RequestBody SignupRequest signupRequest) throws AuthenticationFailedException {
+    public ResponseEntity<Map<String,String>> signUp(@RequestBody SignupRequest signupRequest) throws AuthenticationFailedException, InstanceAlreadyExistsException {
         String token = authService.authenticateUser(signupRequest);
         HashMap<String,String> response = new HashMap<>();
         response.put("token",token);
