@@ -12,9 +12,7 @@ import com.project.tklembackend.repository.UserEntityRepository;
 import jakarta.mail.AuthenticationFailedException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-
 import org.springframework.security.authentication.AuthenticationProvider;
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,8 +20,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
 import javax.management.InstanceAlreadyExistsException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 @Service
@@ -53,7 +52,7 @@ public class AuthService {
             }
     }
 
-    public String authenticateUser(SignupRequest signupRequest) throws AuthenticationFailedException, InstanceAlreadyExistsException {
+    public Map<String,String> authenticateUser(SignupRequest signupRequest) throws AuthenticationFailedException, InstanceAlreadyExistsException {
         if(demandRepository.existsByEmail(signupRequest.getEmail()) && !userEntityRepository.existsByEmail(signupRequest.getEmail())){
             throw new InstanceAlreadyExistsException("Votre compte est en attente, vous devez attendre l'approbation de l'administrateur pour pouvoir vous connecter. Veuillez vérifier auprès de votre responsable si cela se prolonge trop longtemps.");
         }
@@ -64,7 +63,10 @@ public class AuthService {
         Authentication authToken = new UsernamePasswordAuthenticationToken(userDetails, signupRequest.getPassword(), userDetails.getAuthorities());
         Authentication authentication = authenticationProvider.authenticate(authToken);
         if(authentication.isAuthenticated()){
-            return jwtService.generateToken(user.getEmail(),user.getRole().getRoleName());
+            Map<String,String> response = new HashMap<>();
+            response.put("token",jwtService.generateToken(user.getEmail(),user.getRole().getRoleName()));
+            response.put("role",user.getRole().getRoleName().name());
+            return response;
         }
 
         if(!userEntityRepository.findByEmail(signupRequest.getEmail()).get().getEnabled()){
@@ -73,14 +75,23 @@ public class AuthService {
         throw new AuthenticationFailedException("Quelque chose s'est mal passé");
     }
 
-    public Boolean checkJWT(String token){
-        try{
+    public Map<String, Object> checkJWT(String token) {
+        Map<String, Object> response = new HashMap<>();
+        try {
             String extractedToken = jwtService.extractJWT(token);
-            return userEntityRepository.existsByEmail(extractedToken);
-        }catch (Exception e){
-            return false;
+            UserEntity user = userEntityRepository.findByEmail(extractedToken)
+                    .orElseThrow(() -> new NoSuchElementException("Failed attempt"));
+            response.put("status", true);
+            response.put("role", user.getRole()
+                    .getRoleName()); // Assuming you have a method to get the user's role
+            return response;
+        } catch (Exception e) {
+            response.put("status", false);
+            response.put("role", null);
+            return response;
         }
-    };
+    }
+
 
     public String getCurrentRole(){
         return userEntityRepository.findByEmail(getCurrentAuthenticatedUser().get().getEmail()).get().getRole().getRoleName().name();

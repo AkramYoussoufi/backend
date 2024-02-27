@@ -36,8 +36,10 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(request->
                 request.requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/socket/**").permitAll()
                         .anyRequest().authenticated()
         );
+
 
         return http.build();
     }

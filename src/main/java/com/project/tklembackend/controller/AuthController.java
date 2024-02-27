@@ -25,6 +25,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final DemandService demandService;
+
     @PostMapping("/signin")
     public ResponseEntity<Map<String,String>> signIn(@RequestBody RegisterRequest registerRequest) throws InstanceAlreadyExistsException {
         authService.signIn(registerRequest);
@@ -38,15 +39,10 @@ public class AuthController {
     }
     @PostMapping("/signup")
     public ResponseEntity<Map<String,String>> signUp(@RequestBody SignupRequest signupRequest) throws AuthenticationFailedException, InstanceAlreadyExistsException {
-        String token = authService.authenticateUser(signupRequest);
-        HashMap<String,String> response = new HashMap<>();
-        response.put("token",token);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return new ResponseEntity<>(authService.authenticateUser(signupRequest),HttpStatus.OK);
     }
     @PostMapping("/check")
-    public ResponseEntity<Map<String,Boolean>> checkJWT(@RequestBody Map<String, String> request){
-        Map<String,Boolean> response = new HashMap<>();
-        response.put("status",authService.checkJWT(request.get("token")));
-        return new ResponseEntity<>(response,HttpStatus.OK);
+    public ResponseEntity<Map<String,Object>> checkJWT(@RequestBody Map<String, String> request){
+        return new ResponseEntity<>(authService.checkJWT(request.get("token")),HttpStatus.OK);
     }
 }

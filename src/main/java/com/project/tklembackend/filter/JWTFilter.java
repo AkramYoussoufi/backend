@@ -29,7 +29,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(!request.getRequestURI().contains("/api/auth/")){
+        if(!request.getRequestURI().contains("/api/auth/") && !request.getRequestURI().contains("socket") ){
             String token = request.getHeader("AUTHORIZATION").replace("Bearer ","");
             String extractedToken = jwtService.extractJWT(token);
 

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import java.util.Map;
 public class AdminRecieverController {
     private final AdminRecieverService adminRecieverService;
     private final GlobalService globalService;
+
 
     @GetMapping("admin/reciever/all")
     public ResponseEntity<List<RecieverDTO>> getAllRecievers(){
@@ -45,8 +47,8 @@ public class AdminRecieverController {
     }
 
     @PostMapping("reciever/call")
-    public ResponseEntity<Map<String,String>> callReciever(@RequestBody Map<String,String> request){
-        adminRecieverService.callReciever(request.get("massarCode"));
+    public ResponseEntity<Map<String,String>> callReciever(@RequestBody Map<String,String> request) throws IOException {
+        adminRecieverService.callReceiver(request.get("massarCode"));
         return new ResponseEntity<>(globalService.responseBuilder("Reciever has been notified successfully"), HttpStatus.OK);
     }
 }
