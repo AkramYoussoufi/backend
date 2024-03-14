@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class MessageDTO {
     private String name;
     private String formationName;
+    private String massarCode;
 }

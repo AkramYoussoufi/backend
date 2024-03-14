@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface FormationRepository extends JpaRepository<Formation,Long> {
     Optional<Formation> findByName(String formationName);
+
+    boolean existsByName(String name);
 }

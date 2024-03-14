@@ -130,4 +130,21 @@ public class AdminStudentService {
         student.getParents().remove(parent);
         studentRepository.save(student);
     }
+
+    public void addAllStudent(List<StudentDTO> studentDTOList) {
+        List<Student> data = studentDTOList.stream().map(
+                studentDTO -> {
+                    if(!formationRepository.existsByName(studentDTO.getFormationName())){
+                        Formation formation = new Formation();
+                        formation.setName(studentDTO.getFormationName());
+                       this.formationRepository.save(formation);
+                    }
+                    if(studentRepository.existsByMassarCode(studentDTO.getMassarCode())){
+                        studentDTO.setId(studentRepository.findByMassarCode(studentDTO.getMassarCode()).get().getId());
+                    }
+                    return this.StudentDTOtoStudent(studentDTO);
+                }
+        ).toList();
+        studentRepository.saveAll(data);
+    }
 }

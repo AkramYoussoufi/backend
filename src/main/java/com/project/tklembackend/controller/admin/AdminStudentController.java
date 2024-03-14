@@ -2,6 +2,9 @@ package com.project.tklembackend.controller.admin;
 
 import com.project.tklembackend.dto.StudentDTO;
 import com.project.tklembackend.model.Student;
+import com.project.tklembackend.model.StudentLog;
+import com.project.tklembackend.repository.StudentLogRepository;
+import com.project.tklembackend.service.GlobalService;
 import com.project.tklembackend.service.admin.AdminStudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,8 @@ import java.util.Map;
 @AllArgsConstructor
 public class AdminStudentController {
     private final AdminStudentService adminStudentService;
+    private final StudentLogRepository studentLogRepository;
+    private final GlobalService globalService;
 
     @GetMapping("/all")
     public ResponseEntity<List<StudentDTO>> getAllStudents(){
@@ -30,6 +35,12 @@ public class AdminStudentController {
     public ResponseEntity<Student> addStudent(@RequestBody StudentDTO studentDTO) throws InstanceAlreadyExistsException {
         Student student = adminStudentService.addStudent(studentDTO);
         return new ResponseEntity<>(student,HttpStatus.CREATED);
+    }
+
+    @PostMapping("/add/all")
+    public ResponseEntity<Map<String,String>> addAllStudent(@RequestBody List<StudentDTO> studentDTOList) {
+        adminStudentService.addAllStudent(studentDTOList);
+        return new ResponseEntity<>(globalService.responseBuilder("All student has successfully been added"),HttpStatus.CREATED);
     }
 
     @PostMapping("/edit")
@@ -52,5 +63,10 @@ public class AdminStudentController {
         HashMap<String,String> response = new HashMap<>();
         response.put("message","All Selected Student are deleted successfully");
         return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @GetMapping("studentlog/all")
+    public ResponseEntity<List<StudentLog>> getAllStudentLogs(){
+        return new ResponseEntity<>(studentLogRepository.findAll(),HttpStatus.OK);
     }
 }

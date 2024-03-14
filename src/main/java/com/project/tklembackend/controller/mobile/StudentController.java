@@ -1,6 +1,8 @@
 package com.project.tklembackend.controller.mobile;
 
 import com.project.tklembackend.dto.StudentDTO;
+import com.project.tklembackend.model.StudentLog;
+import com.project.tklembackend.repository.StudentLogRepository;
 import com.project.tklembackend.service.GlobalService;
 import com.project.tklembackend.service.admin.AdminStudentService;
 import lombok.AllArgsConstructor;
@@ -33,4 +35,6 @@ public class StudentController {
         adminStudentService.deleteStudentFromParent(response.get("massarCode"));
         return new ResponseEntity<>(globalService.responseBuilder("Successfully removed from parent"),HttpStatus.OK);
     }
+
+
 }

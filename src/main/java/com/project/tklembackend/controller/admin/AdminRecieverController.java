@@ -1,6 +1,8 @@
 package com.project.tklembackend.controller.admin;
 
+import com.project.tklembackend.dto.MessageDTO;
 import com.project.tklembackend.dto.RecieverDTO;
+import com.project.tklembackend.service.AuthService;
 import com.project.tklembackend.service.GlobalService;
 import com.project.tklembackend.service.admin.AdminRecieverService;
 import lombok.AllArgsConstructor;
@@ -18,6 +20,7 @@ import java.util.Map;
 public class AdminRecieverController {
     private final AdminRecieverService adminRecieverService;
     private final GlobalService globalService;
+
 
 
     @GetMapping("admin/reciever/all")
@@ -50,6 +53,11 @@ public class AdminRecieverController {
     public ResponseEntity<Map<String,String>> callReciever(@RequestBody Map<String,String> request) throws IOException {
         adminRecieverService.callReceiver(request.get("massarCode"));
         return new ResponseEntity<>(globalService.responseBuilder("Reciever has been notified successfully"), HttpStatus.OK);
+    }
+    @PostMapping("reciever/accept")
+    public ResponseEntity<Map<String,String>> acceptReciever(@RequestBody MessageDTO messageDTO) throws IOException {
+        adminRecieverService.acceptReciever(messageDTO);
+        return new ResponseEntity<>(globalService.responseBuilder("Student has been logged"), HttpStatus.OK);
     }
 }
 

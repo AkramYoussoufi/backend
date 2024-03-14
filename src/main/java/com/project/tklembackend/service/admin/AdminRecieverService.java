@@ -3,9 +3,7 @@ package com.project.tklembackend.service.admin;
 import com.project.tklembackend.config.TradeWebSocketHandler;
 import com.project.tklembackend.dto.MessageDTO;
 import com.project.tklembackend.dto.RecieverDTO;
-import com.project.tklembackend.model.Reciever;
-import com.project.tklembackend.model.Student;
-import com.project.tklembackend.model.UserEntity;
+import com.project.tklembackend.model.*;
 import com.project.tklembackend.repository.*;
 import com.project.tklembackend.service.AuthService;
 import jakarta.transaction.Transactional;
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -29,7 +28,9 @@ public class AdminRecieverService {
     private final FormationRepository formationRepository;
     private final StudentRepository studentRepository;
     private final TradeWebSocketHandler tradeWebSocketHandler;
-private final AuthService authService;
+    private final AuthService authService;
+    private final ParentRepository parentRepository;
+    private final StudentLogRepository studentLogRepository;
     @Transactional
     public List<RecieverDTO> getAllRecievers(){
         return RecieverRepository.findAll().stream().map(this::convertToDTO).toList();
@@ -111,6 +112,7 @@ private final AuthService authService;
             MessageDTO messageDTO = new MessageDTO();
             messageDTO.setName(student.getName());
             messageDTO.setFormationName(student.getFormation().getName());
+            messageDTO.setMassarCode(student.getMassarCode());
             tradeWebSocketHandler.sendMessage(messageDTO);
         }
     }
@@ -119,5 +121,13 @@ private final AuthService authService;
         String email = authService.getCurrentAuthenticatedUser().get().getEmail();
         Reciever reciever = RecieverRepository.findByEmail(email).get();
         return reciever.getFormation().getName();
+    }
+
+    public void acceptReciever(MessageDTO messageDTO) {
+        StudentLog studentLog = new StudentLog();
+        studentLog.setName(messageDTO.getName());
+        studentLog.setMassarCode(messageDTO.getMassarCode());
+        studentLog.setFormationName(messageDTO.getFormationName());
+        studentLogRepository.save(studentLog);
     }
 }
