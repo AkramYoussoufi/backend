@@ -147,4 +147,10 @@ public class AdminParentService {
                     studentRepository.save(student);
                 });
     }
+
+    public void editParentPassword(ParentDTO parentDTO) {
+        UserEntity user = this.userEntityRepository.findByEmail(parentDTO.getEmail()).get();
+        user.setPassword(this.bCryptPasswordEncoder.encode(parentDTO.getPassword()));
+        userEntityRepository.save(user);
+    }
 }

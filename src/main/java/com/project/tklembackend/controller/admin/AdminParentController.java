@@ -50,4 +50,12 @@ public class AdminParentController {
         response.put("message","Successfully All parents are deleted");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+    @PostMapping("/edit-password")
+    public ResponseEntity<Map<String,String>> editParentPassword(@RequestBody ParentDTO parentDTO){
+        adminParentService.editParentPassword(parentDTO);
+        Map<String,String> response = new HashMap<>();
+        response.put("message","Parent Password has successfully modified");
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
 }
